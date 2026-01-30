@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .edit-profile-card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+        .profile-header-edit {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+        }
+        .form-section {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        .password-help {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .sidebar {
+            background: linear-gradient(180deg, #0d6efd 0%, #0b5ed7 100%);
+            min-height: 100vh;
+            border-radius: 0 15px 15px 0;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            display: block;
+            border-radius: 8px;
+            margin: 5px 10px;
+            transition: all 0.3s;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Teacher Portal</a>
+        <div class="navbar-nav ms-auto">
+            <span class="navbar-text me-3" sec:authentication="name"></span>
+            <form th:action="@{/logout}" method="post">
+                <button class="btn btn-outline-light" type="submit">Logout</button>
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 sidebar p-0">
+            <div class="p-4">
+                <h4 class="text-white mb-4"><i class="fas fa-chalkboard-teacher me-2"></i>Teacher Portal</h4>
+                <div class="list-group list-group-flush bg-transparent">
+                    <a href="/teacher"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="/teacher/courses"><i class="fas fa-book me-2"></i>My Courses</a>
+                    <a href="/teacher/profile"><i class="fas fa-user me-2"></i>My Profile</a>
+                    <a href="/teacher/profile/edit" class="active"><i class="fas fa-edit me-2"></i>Edit Profile</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-10 p-4">
+            <!-- Messages -->
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                Profile updated successfully!
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Edit Profile Card -->
+            <div class="card edit-profile-card">
+                <!-- Header -->
+                <div class="profile-header-edit">
+                    <h2><i class="fas fa-user-edit me-2"></i>Edit Profile</h2>
+                    <p>Update your professional information</p>
+                </div>
+
+                <!-- Edit Form -->
+                <div class="card-body">
+                    <form th:action="@{/teacher/profile/update}" method="post" th:object="${teacher}">
+
+                        <!-- Personal Information Section -->
+                        <div class="form-section">
+                            <h5 class="mb-3"><i class="fas fa-user-circle me-2"></i>Personal Information</h5>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="firstName" class="form-label">First Name *</label>
+                                        <input type="text" class="form-control" id="firstName"
+                                               name="firstName" th:value="${teacher.firstName}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="lastName" class="form-label">Last Name *</label>
+                                        <input type="text" class="form-control" id="lastName"
+                                               name="lastName" th:value="${teacher.lastName}" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="email"
+                                       name="email" th:value="${teacher.email}" required>
+                                <div class="form-text">This email will be used for university communications</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="qualification" class="form-label">Qualification</label>
+                                <input type="text" class="form-control" id="qualification"
+                                       name="qualification" th:value="${teacher.qualification}">
+                                <div class="form-text">e.g., PhD in Computer Science, M.Sc. in Mathematics, etc.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Teacher ID</label>
+                                <div class="form-control bg-light" readonly>
+                                    <strong th:text="${teacher.teacherId}"></strong>
+                                    <small class="text-muted ms-2">(Cannot be changed)</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                <div class="form-control bg-light" readonly>
+                                    <strong th:text="${teacher.username}"></strong>
+                                    <small class="text-muted ms-2">(Cannot be changed)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Password Change Section -->
+                        <div class="form-section">
+                            <h5 class="mb-3"><i class="fas fa-lock me-2"></i>Change Password</h5>
+                            <p class="password-help mb-3">
+                                Fill in the fields below only if you want to change your password.
+                                Leave them empty to keep your current password.
+                            </p>
+
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label">Current Password *</label>
+                                <input type="password" class="form-control" id="currentPassword"
+                                       name="currentPassword" required>
+                                <div class="form-text">Required to verify your identity</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">New Password</label>
+                                <input type="password" class="form-control" id="newPassword"
+                                       name="newPassword" minlength="6">
+                                <div class="form-text">Minimum 6 characters. Leave empty to keep current password.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirmPassword"
+                                       name="confirmPassword" minlength="6">
+                            </div>
+                        </div>
+
+                        <!-- Read-only Information -->
+                        <div class="form-section">
+                            <h5 class="mb-3"><i class="fas fa-info-circle me-2"></i>Additional Information</h5>
+
+                            <div class="mb-3">
+                                <label class="form-label">Department</label>
+                                <div class="form-control bg-light" readonly>
+                                    <span th:if="${teacher.department != null}"
+                                          class="badge bg-primary"
+                                          th:text="${teacher.department.name}"></span>
+                                    <span th:if="${teacher.department == null}" class="text-muted">
+                                        Not assigned to any department
+                                    </span>
+                                    <small class="text-muted ms-2">(Contact admin for department changes)</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Teaching Courses</label>
+                                <div class="form-control bg-light" readonly>
+                                    <span class="badge bg-info" th:text="${courses.size()}"></span> courses
+                                    <small class="text-muted ms-2">(Manage through Courses section)</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Account Status</label>
+                                <div class="form-control bg-light" readonly>
+                                    <span class="badge bg-success">Active</span>
+                                    <small class="text-muted ms-2">(Your account is active)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="/teacher/profile" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Information Alert -->
+            <div class="alert alert-info mt-4">
+                <h6><i class="fas fa-lightbulb me-2"></i>Important Notes:</h6>
+                <ul class="mb-0">
+                    <li>Teacher ID and Username cannot be changed</li>
+                    <li>Department assignments can only be changed by the administrator</li>
+                    <li>You must enter your current password to save any changes</li>
+                    <li>For security reasons, your password will be encrypted</li>
+                    <li>Professional qualification updates will reflect in your profile</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight active sidebar link
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+
+        // Password confirmation validation
+        const newPassword = document.getElementById('newPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const form = document.querySelector('form');
+
+        function validatePasswords() {
+            if (newPassword && confirmPassword && newPassword.value && confirmPassword.value &&
+                newPassword.value !== confirmPassword.value) {
+                confirmPassword.setCustomValidity('Passwords do not match');
+                confirmPassword.classList.add('is-invalid');
+                return false;
+            } else if (confirmPassword) {
+                confirmPassword.setCustomValidity('');
+                confirmPassword.classList.remove('is-invalid');
+                return true;
+            }
+            return true;
+        }
+
+        if (newPassword && confirmPassword) {
+            newPassword.addEventListener('input', validatePasswords);
+            confirmPassword.addEventListener('input', validatePasswords);
+
+            form.addEventListener('submit', function(event) {
+                if (!validatePasswords()) {
+                    event.preventDefault();
+                    alert('Please make sure your passwords match.');
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

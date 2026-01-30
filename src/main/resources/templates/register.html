@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - University System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .role-fields { display: none; }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Register</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Display error message -->
+                    <div th:if="${error}" class="alert alert-danger">
+                        <span th:text="${error}"></span>
+                    </div>
+                    <div th:if="${param.success}" class="alert alert-success">
+                        Registration successful! Please login.
+                    </div>
+
+                    <!-- CSRF Token is automatically added by Thymeleaf when using th:action -->
+                    <form th:action="@{/register}" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Username *</label>
+                                    <input type="text" class="form-control" id="username"
+                                           name="username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email *</label>
+                                    <input type="email" class="form-control" id="email"
+                                           name="email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password *</label>
+                                    <input type="password" class="form-control" id="password"
+                                           name="password" required minlength="6">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="role" class="form-label">Role *</label>
+                                    <select class="form-select" id="role" name="role" required
+                                            onchange="showRoleFields()">
+                                        <option value="">Select Role</option>
+                                        <option value="ADMIN">Admin</option>
+                                        <option value="TEACHER">Teacher</option>
+                                        <option value="STUDENT">Student</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Student Fields -->
+                                <div id="studentFields" class="role-fields">
+                                    <h5>Student Information</h5>
+                                    <div class="mb-3">
+                                        <label for="studentId" class="form-label">Student ID *</label>
+                                        <input type="text" class="form-control" id="studentId"
+                                               name="studentId">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="firstName" class="form-label">First Name *</label>
+                                        <input type="text" class="form-control" id="firstName"
+                                               name="firstName">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="lastName" class="form-label">Last Name *</label>
+                                        <input type="text" class="form-control" id="lastName"
+                                               name="lastName">
+                                    </div>
+                                </div>
+
+                                <!-- Teacher Fields -->
+                                <div id="teacherFields" class="role-fields">
+                                    <h5>Teacher Information</h5>
+                                    <div class="mb-3">
+                                        <label for="teacherId" class="form-label">Teacher ID *</label>
+                                        <input type="text" class="form-control" id="teacherId"
+                                               name="teacherId">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="teacherFirstName" class="form-label">First Name *</label>
+                                        <input type="text" class="form-control" id="teacherFirstName"
+                                               name="firstName">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="teacherLastName" class="form-label">Last Name *</label>
+                                        <input type="text" class="form-control" id="teacherLastName"
+                                               name="lastName">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="qualification" class="form-label">Qualification</label>
+                                        <input type="text" class="form-control" id="qualification"
+                                               name="qualification">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+
+                    <div class="mt-3 text-center">
+                        <p>Already have an account? <a th:href="@{/login}">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showRoleFields() {
+        var role = document.getElementById('role').value;
+
+        // Hide all role fields
+        document.getElementById('studentFields').style.display = 'none';
+        document.getElementById('teacherFields').style.display = 'none';
+
+        // Show selected role fields
+        if (role === 'STUDENT') {
+            document.getElementById('studentFields').style.display = 'block';
+        } else if (role === 'TEACHER') {
+            document.getElementById('teacherFields').style.display = 'block';
+        }
+        // ADMIN has no additional fields
+    }
+
+    // Call on page load to show correct fields if role is preselected
+    document.addEventListener('DOMContentLoaded', function() {
+        showRoleFields();
+    });
+</script>
+</body>
+</html>
