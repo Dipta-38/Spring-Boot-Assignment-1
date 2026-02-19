@@ -46,7 +46,7 @@ public class Student extends User {
         this.lastName = lastName;
     }
 
-    // Helper method for enrollment
+
     public void enrollInCourse(Course course) {
         this.enrolledCourses.add(course);
         course.getStudents().add(this);
@@ -57,7 +57,7 @@ public class Student extends User {
         course.getStudents().remove(this);
     }
 
-    // Getters and Setters
+
     public String getStudentId() { return studentId; }
     public void setStudentId(String studentId) { this.studentId = studentId; }
 

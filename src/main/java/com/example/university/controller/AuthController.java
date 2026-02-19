@@ -75,7 +75,7 @@ public class AuthController {
         logger.info("Username: {}, Email: {}, Role: {}", username, email, role);
 
         try {
-            // Check if username exists
+
             boolean usernameExists = userRepository.existsByUsername(username);
             logger.info("Username exists? {}", usernameExists);
 
@@ -84,7 +84,7 @@ public class AuthController {
                 return "register";
             }
 
-            // Check if email exists
+
             boolean emailExists = userRepository.existsByEmail(email);
             logger.info("Email exists? {}", emailExists);
 
@@ -93,11 +93,11 @@ public class AuthController {
                 return "register";
             }
 
-            // Create user based on role
+
             if ("STUDENT".equals(role)) {
                 logger.info("Creating STUDENT: {}", username);
 
-                // Validate student fields
+
                 if (studentId == null || studentId.trim().isEmpty()) {
                     model.addAttribute("error", "Student ID is required");
                     return "register";
@@ -108,7 +108,7 @@ public class AuthController {
                     return "register";
                 }
 
-                // Create student entity
+
                 Student student = new Student();
                 student.setUsername(username);
                 student.setEmail(email);
@@ -126,7 +126,7 @@ public class AuthController {
             } else if ("TEACHER".equals(role)) {
                 logger.info("Creating TEACHER: {}", username);
 
-                // Validate teacher fields
+
                 if (teacherId == null || teacherId.trim().isEmpty()) {
                     model.addAttribute("error", "Teacher ID is required");
                     return "register";
@@ -137,7 +137,7 @@ public class AuthController {
                     return "register";
                 }
 
-                // Create teacher entity
+
                 Teacher teacher = new Teacher();
                 teacher.setUsername(username);
                 teacher.setEmail(email);
@@ -156,7 +156,7 @@ public class AuthController {
             } else if ("ADMIN".equals(role)) {
                 logger.info("Creating ADMIN: {}", username);
 
-                // Create admin user (regular User entity)
+
                 User admin = new User();
                 admin.setUsername(username);
                 admin.setEmail(email);
@@ -183,14 +183,14 @@ public class AuthController {
         }
     }
 
-    // ADD THIS METHOD - Dashboard redirect based on role
+
     @GetMapping("/dashboard")
     public String redirectToRoleDashboard(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
         }
 
-        // Check user role and redirect accordingly
+
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             return "redirect:/admin";
         } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_TEACHER"))) {
@@ -199,7 +199,6 @@ public class AuthController {
             return "redirect:/student";
         }
 
-        // Default fallback
         return "redirect:/login";
     }
 }

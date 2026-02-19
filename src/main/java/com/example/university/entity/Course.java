@@ -47,12 +47,12 @@ public class Course {
         this.credits = credits;
     }
 
-    // Helper method to get student count
+
     public int getEnrolledStudentCount() {
         return students.size();
     }
 
-    // Getters and Setters
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

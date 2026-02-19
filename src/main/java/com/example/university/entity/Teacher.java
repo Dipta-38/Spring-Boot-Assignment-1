@@ -40,7 +40,7 @@ public class Teacher extends User {
         this.qualification = qualification;
     }
 
-    // Getters and Setters
+
     public String getTeacherId() { return teacherId; }
     public void setTeacherId(String teacherId) { this.teacherId = teacherId; }
 

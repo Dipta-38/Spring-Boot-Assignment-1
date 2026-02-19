@@ -91,7 +91,7 @@ public class StudentController {
         return "student/profile";
     }
 
-    // NEW: Get edit profile form
+
     @GetMapping("/profile/edit")
     public String editProfileForm(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -102,7 +102,7 @@ public class StudentController {
         return "student/edit-profile";
     }
 
-    // NEW: Update profile
+
     @PostMapping("/profile/update")
     public String updateProfile(@ModelAttribute Student student,
                                 @RequestParam(required = false) String newPassword,
@@ -114,19 +114,19 @@ public class StudentController {
         try {
             Student existingStudent = studentService.getStudentByUsername(username);
 
-            // Verify current password
+
             if (!passwordEncoder.matches(currentPassword, existingStudent.getPassword())) {
                 model.addAttribute("error", "Current password is incorrect");
                 model.addAttribute("student", existingStudent);
                 return "student/edit-profile";
             }
 
-            // Update basic info
+
             existingStudent.setFirstName(student.getFirstName());
             existingStudent.setLastName(student.getLastName());
             existingStudent.setEmail(student.getEmail());
 
-            // Update password if provided
+
             if (newPassword != null && !newPassword.trim().isEmpty()) {
                 existingStudent.setPassword(passwordEncoder.encode(newPassword));
             }

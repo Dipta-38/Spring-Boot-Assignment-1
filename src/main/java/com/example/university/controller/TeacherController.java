@@ -54,7 +54,7 @@ public class TeacherController {
         Teacher teacher = teacherService.getTeacherByUsername(username);
         List<Course> myCourses = courseService.getCoursesByTeacher(teacher.getId());
 
-        // Get all departments for the dropdown
+
         List<Department> departments = departmentService.getAllDepartments();
 
         model.addAttribute("courses", myCourses);
@@ -74,13 +74,13 @@ public class TeacherController {
         try {
             Teacher teacher = teacherService.getTeacherByUsername(username);
 
-            // Validate departmentId
+
             if (departmentId == null) {
                 model.addAttribute("error", "Please select a department for the course");
                 return populateCourseFormModel(model, username, course);
             }
 
-            // Validate course name
+
             if (course.getName() == null || course.getName().trim().isEmpty()) {
                 model.addAttribute("error", "Course name is required");
                 return populateCourseFormModel(model, username, course);
@@ -104,7 +104,7 @@ public class TeacherController {
         Teacher teacher = teacherService.getTeacherByUsername(username);
         List<Department> departments = departmentService.getAllDepartments();
 
-        // Check if teacher owns this course
+
         if (course.getTeacher() == null || !course.getTeacher().getId().equals(teacher.getId())) {
             model.addAttribute("error", "You can only edit your own courses");
             return populateCourseFormModel(model, username, new Course());
@@ -128,19 +128,19 @@ public class TeacherController {
             Teacher teacher = teacherService.getTeacherByUsername(username);
             Course existingCourse = courseService.getCourseById(id);
 
-            // Check if teacher owns this course
+
             if (existingCourse.getTeacher() == null || !existingCourse.getTeacher().getId().equals(teacher.getId())) {
                 model.addAttribute("error", "You can only edit your own courses");
                 return populateCourseFormModel(model, username, course);
             }
 
-            // Validate departmentId
+
             if (departmentId == null) {
                 model.addAttribute("error", "Please select a department for the course");
                 return populateCourseFormModel(model, username, course);
             }
 
-            // Validate course name
+
             if (course.getName() == null || course.getName().trim().isEmpty()) {
                 model.addAttribute("error", "Course name is required");
                 return populateCourseFormModel(model, username, course);
@@ -164,7 +164,7 @@ public class TeacherController {
             Teacher teacher = teacherService.getTeacherByUsername(username);
             Course course = courseService.getCourseById(id);
 
-            // Check if teacher owns this course
+
             if (course.getTeacher() == null || !course.getTeacher().getId().equals(teacher.getId())) {
                 model.addAttribute("error", "You can only delete your own courses");
                 return populateCourseFormModel(model, username, new Course());
@@ -187,7 +187,7 @@ public class TeacherController {
         Course course = courseService.getCourseById(id);
         Teacher teacher = teacherService.getTeacherByUsername(username);
 
-        // Check if teacher owns this course
+
         if (course.getTeacher() == null || !course.getTeacher().getId().equals(teacher.getId())) {
             model.addAttribute("error", "You can only view students in your own courses");
             return populateCourseFormModel(model, username, new Course());
@@ -236,7 +236,7 @@ public class TeacherController {
         try {
             Teacher existingTeacher = teacherService.getTeacherByUsername(username);
 
-            // Verify current password
+
             if (!passwordEncoder.matches(currentPassword, existingTeacher.getPassword())) {
                 model.addAttribute("error", "Current password is incorrect");
                 model.addAttribute("teacher", existingTeacher);
@@ -244,13 +244,13 @@ public class TeacherController {
                 return "teacher/edit-profile";
             }
 
-            // Update basic info
+
             existingTeacher.setFirstName(teacher.getFirstName());
             existingTeacher.setLastName(teacher.getLastName());
             existingTeacher.setEmail(teacher.getEmail());
             existingTeacher.setQualification(teacher.getQualification());
 
-            // Update password if provided
+
             if (newPassword != null && !newPassword.trim().isEmpty()) {
                 existingTeacher.setPassword(passwordEncoder.encode(newPassword));
             }
@@ -267,7 +267,7 @@ public class TeacherController {
         }
     }
 
-    // Helper method to populate course form model
+
     private String populateCourseFormModel(Model model, String username, Course course) {
         Teacher teacher = teacherService.getTeacherByUsername(username);
         List<Course> myCourses = courseService.getCoursesByTeacher(teacher.getId());

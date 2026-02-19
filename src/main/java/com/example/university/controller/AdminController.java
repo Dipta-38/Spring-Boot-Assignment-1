@@ -73,7 +73,7 @@ public class AdminController {
         return "redirect:/admin/departments";
     }
 
-    // ========== COURSE CRUD ==========
+
     @GetMapping("/courses")
     public String listCourses(Model model) {
         model.addAttribute("courses", courseService.getAllCourses());
@@ -114,7 +114,7 @@ public class AdminController {
         return "redirect:/admin/courses";
     }
 
-    // ========== TEACHER MANAGEMENT ==========
+
     @GetMapping("/teachers")
     public String listTeachers(Model model) {
         model.addAttribute("teachers", teacherService.getAllTeachers());
@@ -137,19 +137,19 @@ public class AdminController {
                                 @RequestParam(required = false) Long departmentId) {
         Teacher existingTeacher = teacherService.getTeacherById(id);
 
-        // Update basic info
+
         existingTeacher.setFirstName(teacher.getFirstName());
         existingTeacher.setLastName(teacher.getLastName());
         existingTeacher.setEmail(teacher.getEmail());
         existingTeacher.setTeacherId(teacher.getTeacherId());
         existingTeacher.setQualification(teacher.getQualification());
 
-        // Update password if provided
+
         if (newPassword != null && !newPassword.trim().isEmpty()) {
             existingTeacher.setPassword(passwordEncoder.encode(newPassword));
         }
 
-        // Update department
+
         if (departmentId != null) {
             Department department = departmentService.getDepartmentById(departmentId);
             existingTeacher.setDepartment(department);
@@ -177,7 +177,7 @@ public class AdminController {
         return "admin/view-teacher";
     }
 
-    // ========== STUDENT MANAGEMENT ==========
+
     @GetMapping("/students")
     public String listStudents(Model model) {
         model.addAttribute("students", studentService.getAllStudents());
@@ -189,7 +189,7 @@ public class AdminController {
     public String editStudentForm(@PathVariable Long id, Model model) {
         Student student = studentService.getStudentById(id);
 
-        // Extract department IDs for easier template handling
+
         List<Long> studentDepartmentIds = student.getDepartments().stream()
                 .map(Department::getId)
                 .collect(Collectors.toList());
@@ -207,18 +207,18 @@ public class AdminController {
                                 @RequestParam(required = false) List<Long> departmentIds) {
         Student existingStudent = studentService.getStudentById(id);
 
-        // Update basic info
+
         existingStudent.setFirstName(student.getFirstName());
         existingStudent.setLastName(student.getLastName());
         existingStudent.setEmail(student.getEmail());
         existingStudent.setStudentId(student.getStudentId());
 
-        // Update password if provided
+
         if (newPassword != null && !newPassword.trim().isEmpty()) {
             existingStudent.setPassword(passwordEncoder.encode(newPassword));
         }
 
-        // Update departments
+
         existingStudent.getDepartments().clear();
         if (departmentIds != null && !departmentIds.isEmpty()) {
             for (Long deptId : departmentIds) {
